@@ -10,6 +10,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onCanvasClick }) => 
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const worldImageRef = useRef<HTMLImageElement>(null)
   const avatarImagesRef = useRef<Map<string, HTMLImageElement>>(new Map())
+  const animationFrameRef = useRef<number | null>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -25,18 +26,28 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onCanvasClick }) => 
       redraw()
     }
 
-    // Draw everything
+    // Draw everything with animation frame throttling
     const redraw = () => {
       if (!gameState) return
 
-      // Clear the canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      // Cancel any pending animation frame
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
 
-      // Draw world map with camera offset
-      drawWorldMap()
+      // Schedule the actual draw for the next animation frame
+      animationFrameRef.current = requestAnimationFrame(() => {
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Draw all players
-      drawPlayers()
+        // Draw world map with camera offset
+        drawWorldMap()
+
+        // Draw all players
+        drawPlayers()
+
+        animationFrameRef.current = null
+      })
     }
 
     // Draw the world map with camera transformation
@@ -116,17 +127,22 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onCanvasClick }) => 
 
       // Set text style
       ctx.font = isCurrentPlayer ? 'bold 14px Arial' : '12px Arial'
-      ctx.fillStyle = isCurrentPlayer ? '#FFD700' : 'white' // Gold for current player
-      ctx.strokeStyle = 'black'
-      ctx.lineWidth = 2
       ctx.textAlign = 'center'
 
       // Position text above avatar (estimate avatar width as 32px)
       const textX = screenX + 16
       const textY = screenY - 5
 
-      // Draw text outline (stroke) first, then fill
-      ctx.strokeText(player.username, textX, textY)
+      // Use shadow for better readability instead of stroke to reduce flickering
+      ctx.shadowColor = 'black'
+      ctx.shadowBlur = 3
+      ctx.shadowOffsetX = 1
+      ctx.shadowOffsetY = 1
+
+      // Set fill color
+      ctx.fillStyle = isCurrentPlayer ? '#FFD700' : 'white' // Gold for current player
+
+      // Draw text once with shadow
       ctx.fillText(player.username, textX, textY)
 
       // Add movement indicator for moving players
@@ -167,6 +183,9 @@ const GameCanvas: React.FC<GameCanvasProps> = ({ gameState, onCanvasClick }) => 
     // Cleanup
     return () => {
       window.removeEventListener('resize', resizeCanvas)
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
     }
   }, [gameState])
 
