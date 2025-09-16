@@ -15,7 +15,6 @@ export interface Avatar {
     north: string[]
     south: string[]
     east: string[]
-    // west uses flipped east frames
   }
 }
 

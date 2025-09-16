@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { UIVisibility } from '../components/UIMenu'
 import { useMobileDetection } from './useMobileDetection'
 
-// All UI elements hidden by default on refresh for clean experience
 const DEFAULT_VISIBILITY: UIVisibility = {
   playerInfo: false,
   onlinePlayersList: false,
@@ -21,12 +20,9 @@ export const useUIVisibility = () => {
   const isMobile = useMobileDetection()
 
   const [visibility, setVisibility] = useState<UIVisibility>(() => {
-    // Always start with everything hidden for clean experience on refresh
-    // User can manually enable elements through the UI menu
     return DEFAULT_VISIBILITY
   })
 
-  // Save to localStorage whenever visibility changes (use appropriate storage key)
   useEffect(() => {
     const storageKey = isMobile ? MOBILE_STORAGE_KEY : STORAGE_KEY
     try {
@@ -36,11 +32,7 @@ export const useUIVisibility = () => {
     }
   }, [visibility, isMobile])
 
-  // Handle mobile state changes (e.g., window resize from desktop to mobile)
-  // Keep the current visibility state as user has manually configured it
   useEffect(() => {
-    // Don't reset visibility on mobile state changes - preserve user's manual choices
-    // The clean default only applies on initial page load/refresh
   }, [isMobile])
 
   const toggleVisibility = (key: keyof UIVisibility) => {

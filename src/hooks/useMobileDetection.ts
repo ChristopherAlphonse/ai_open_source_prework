@@ -6,7 +6,8 @@ export const useMobileDetection = () => {
   useEffect(() => {
     const checkMobile = () => {
 
-      const isMobileOrTablet = window.innerWidth <= 1024
+  const MOBILE_BREAKPOINT = 1024
+  const isMobileOrTablet = window.innerWidth <= MOBILE_BREAKPOINT
 
       setIsMobile(isMobileOrTablet)
     }

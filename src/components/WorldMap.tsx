@@ -17,7 +17,6 @@ const WorldMap: React.FC = () => {
   const [gameState, setGameState] = useState<GameState | null>(null)
   const { visibility, toggleVisibility, setAllVisible } = useUIVisibility()
 
-  // Initialize game service
   useEffect(() => {
     if (!gameServiceRef.current) {
       gameServiceRef.current = new GameService()
@@ -33,10 +32,8 @@ const WorldMap: React.FC = () => {
     }
   }, [])
 
-  // Set up keyboard controls
   useKeyboardControls(gameServiceRef.current)
 
-  // Handle canvas click for movement
   const handleCanvasClick = (worldX: number, worldY: number) => {
     const gameService = gameServiceRef.current
     if (gameService) {
@@ -45,7 +42,6 @@ const WorldMap: React.FC = () => {
 
   }
 
-  // Handle username change
   const handleUsernameChange = (newUsername: string) => {
     const gameService = gameServiceRef.current
     if (gameService) {
@@ -53,7 +49,6 @@ const WorldMap: React.FC = () => {
     }
   }
 
-  // Handle minimap click
   useEffect(() => {
     const handleMinimapClick = (event: CustomEvent) => {
       const { x, y } = event.detail
@@ -69,7 +64,6 @@ const WorldMap: React.FC = () => {
 
   return (
     <div className="relative w-full h-full">
-      {/* Connection Status Overlay */}
       {(!gameState?.connected) && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-gray-900 text-white px-6 py-4 rounded-lg shadow-lg text-center">
@@ -80,13 +74,11 @@ const WorldMap: React.FC = () => {
         </div>
       )}
 
-      {/* Main game canvas */}
       <GameCanvas
         gameState={gameState}
         onCanvasClick={handleCanvasClick}
       />
 
-      {/* UI Components - conditionally rendered based on visibility */}
       {visibility.playerInfo && (
         <PlayerInfo
           gameState={gameState}
@@ -113,7 +105,6 @@ const WorldMap: React.FC = () => {
         />
       )}
 
-      {/* UI Menu */}
       <UIMenu
         visibility={visibility}
         onToggle={toggleVisibility}

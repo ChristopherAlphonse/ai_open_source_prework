@@ -46,10 +46,8 @@ const UIMenu: React.FC<UIMenuProps> = ({ visibility, onToggle, onSetAllVisible }
 
   return (
     <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-30">
-      {/* Main Menu Bar */}
       <div className="bg-gradient-to-r from-gray-900/95 to-gray-800/95 backdrop-blur-md rounded-xl p-2 border border-gray-700/30 shadow-xl">
         <div className="flex items-center space-x-2">
-          {/* Menu Toggle Button */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="w-10 h-10 rounded-lg bg-gray-800/60 hover:bg-gray-700/80 text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md border border-gray-600/30 flex items-center justify-center"
@@ -64,10 +62,8 @@ const UIMenu: React.FC<UIMenuProps> = ({ visibility, onToggle, onSetAllVisible }
 
 
 
-              {/* Separator */}
               <div className="w-px h-6 bg-gradient-to-b from-transparent via-gray-500/50 to-transparent"></div>
 
-              {/* UI Toggle Buttons */}
               <div className="flex items-center space-x-1.5">
                 {menuItems.map(item => (
                   <button
@@ -83,7 +79,6 @@ const UIMenu: React.FC<UIMenuProps> = ({ visibility, onToggle, onSetAllVisible }
 
         </div>
 
-        {/* Expanded Options */}
         {isExpanded && (
           <div className="mt-2 pt-2 border-t border-gray-600/30">
             <div className="flex items-center justify-center space-x-2">
